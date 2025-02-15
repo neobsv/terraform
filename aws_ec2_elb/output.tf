@@ -23,8 +23,14 @@ output "internet_gateway_id" {
 }
 
 # output the id of the security group
- output "security_group_id" {
+ output "sg_security_group_id" {
     value = aws_security_group.sg.id
+    description = "The ID of the created security group"
+}
+
+# output the id of the security group
+ output "elb_security_group_id" {
+    value = aws_security_group.elb.id
     description = "The ID of the created security group"
 }
 
@@ -50,5 +56,17 @@ output "instance0_private_ip" {
 output "instance1_private_ip" {
     value = aws_instance.instance1.private_ip
     description = "The private IP of the created EC2 instance1"
+}
+
+# output id of the aws elb
+output "elb0_id" {
+    value = aws_elb.elb0.id
+    description = "The ID of the created Elastic Load Balancer"
+}
+
+# output dns name of the aws elb
+output "elb0_dns_name" {
+    value = aws_elb.elb0.dns_name
+    description = "The DNS name of the created Elastic Load Balancer"
 }
 

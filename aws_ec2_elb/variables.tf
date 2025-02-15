@@ -22,20 +22,8 @@ variable "private_network_interface_ips" {
     default = ["10.0.2.10"]
 }
 
-variable "security_group_name" {
-    type = string
-    description = "Name for the security group"
-    default = "vpc0_sg"
-}
-
-variable "cidr_block" {
+variable "all_cidr_block" {
     type = list(string)
     description = "List of CIDR blocks for the allowed ingress"
     default = ["0.0.0.0/0"]
-}
-
-variable "availability_zone" {
-    type = string
-    description = "The AWS availability zone"
-    default = "eu-north-1a"
 }

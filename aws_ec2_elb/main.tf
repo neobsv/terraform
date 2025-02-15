@@ -30,6 +30,8 @@ resource "aws_instance" "instance0" {
     create_before_destroy = true
   }
 
+  depends_on = [aws_network_interface.eni.0]
+
 }
 
 # Create an EC2 instance in the public subnet
@@ -49,5 +51,47 @@ resource "aws_instance" "instance1" {
   lifecycle {
     create_before_destroy = true
   }
+
+  depends_on = [aws_network_interface.eni.1]
+}
+
+
+# # Create a new load balancer
+resource "aws_elb" "elb0" {
+  name               = "elb0"
+  availability_zones = ["eu-north-1a"]
+  security_groups    = [aws_security_group.elb.id]
+
+
+  listener {
+    instance_port     = 8000
+    instance_protocol = "http"
+    lb_port           = 80
+    lb_protocol       = "http"
+  }
+
+  health_check {
+    healthy_threshold   = 2
+    unhealthy_threshold = 2
+    timeout             = 3
+    target              = "HTTP:8000/"
+    interval            = 30
+  }
+
+  instances                   = [aws_instance.instance0.id, aws_instance.instance1.id]
+  cross_zone_load_balancing   = false
+  idle_timeout                = 400
+  connection_draining         = true
+  connection_draining_timeout = 400
+
+  tags = {
+    Name = "elb0"
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+
+  depends_on = [aws_security_group.elb, aws_instance.instance0, aws_instance.instance1]
 
 }

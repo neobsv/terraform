@@ -11,7 +11,7 @@ resource "aws_vpc" "vpc0" {
 resource "aws_subnet" "public" {
   vpc_id            = aws_vpc.vpc0.id
   cidr_block        = var.public_subnet_cidr
-  availability_zone = var.availability_zone
+  availability_zone = "eu-north-1a"
 
   map_public_ip_on_launch = true
 
@@ -22,13 +22,15 @@ resource "aws_subnet" "public" {
   lifecycle {
     create_before_destroy = true
   }
+
+  depends_on = [aws_vpc.vpc0]
 }
 
 # Create a private subnet within the VPC, to host instances
 resource "aws_subnet" "private" {
   vpc_id            = aws_vpc.vpc0.id
   cidr_block        = var.private_subnet_cidr
-  availability_zone = var.availability_zone
+  availability_zone = "eu-north-1a"
 
   map_public_ip_on_launch = false
 
@@ -39,6 +41,8 @@ resource "aws_subnet" "private" {
   lifecycle {
     create_before_destroy = true
   }
+
+  depends_on = [aws_vpc.vpc0]
 }
 
 # Create a network interface for the private subnet
@@ -55,6 +59,8 @@ resource "aws_network_interface" "eni" {
   lifecycle {
     create_before_destroy = true
   }
+
+  depends_on = [aws_subnet.private]
 }
 
 # Create an Internet Gateway for the VPC
@@ -68,4 +74,6 @@ resource "aws_internet_gateway" "igw" {
   lifecycle {
     create_before_destroy = true
   }
+
+  depends_on = [aws_vpc.vpc0]
 }
