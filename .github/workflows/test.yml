@@ -1,4 +1,4 @@
-name: Bencoder/Bdecoder
+name: Terraform AWS EC2 and AWS ELB
 
 on:
   push:
@@ -34,17 +34,17 @@ jobs:
        - name: Terraform Init
          id: init
          run: |
-           terraform init -input=false
+           terraform init
        
        - name: Terraform Validate
          id: validate
          run: |
-           terraform validate -input=false
+           terraform validate
 
        - name: Terraform Plan
          id: plan
          run: |
-           terraform plan -input=false
+           terraform plan
        
        - name: Terraform Plan Check
          if: steps.plan.outcome == 'failure'
