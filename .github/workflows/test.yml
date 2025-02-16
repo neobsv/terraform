@@ -9,8 +9,12 @@ on:
     branches:
       - main
 
+
 jobs:
   test:
+    defaults:
+      run:
+        working-directory: ./aws_ec2_elb
     permissions:
       contents: read
     runs-on: ${{ matrix.os }}
