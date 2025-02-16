@@ -11,7 +11,7 @@ output "subnet_ids" {
 }
 
 # output the id of the public subnet
- output "public_subnet_id" {
+output "public_subnet_id" {
     value = aws_subnet.public.id
     description = "The ID of the created public subnet"
 }
@@ -23,25 +23,25 @@ output "internet_gateway_id" {
 }
 
 # output the id of the security group
- output "sg_security_group_id" {
+output "sg_security_group_id" {
     value = aws_security_group.sg.id
     description = "The ID of the created security group"
 }
 
 # output the id of the security group
- output "elb_security_group_id" {
+output "elb_security_group_id" {
     value = aws_security_group.elb.id
     description = "The ID of the created security group"
 }
 
 # output the id of the aws instance
- output "instance_id0" {
+output "instance_id0" {
     value = aws_instance.instance0.id
     description = "The ID of the created EC2 instance0"
 }
 
 # output the id of the aws instance
- output "instance_id1" {
+output "instance_id1" {
     value = aws_instance.instance1.id
     description = "The ID of the created EC2 instance1"
 }
@@ -69,4 +69,3 @@ output "elb0_dns_name" {
     value = aws_elb.elb0.dns_name
     description = "The DNS name of the created Elastic Load Balancer"
 }
-

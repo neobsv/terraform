@@ -74,7 +74,8 @@ resource "aws_security_group" "elb" {
 
 # Network ACL for Internet Gateway
 resource "aws_network_acl" "main" {
-  vpc_id = aws_vpc.vpc0.id
+  vpc_id     = aws_vpc.vpc0.id
+  subnet_ids = [aws_subnet.public.id, aws_subnet.private.id]
 
 # for api calls
   egress {

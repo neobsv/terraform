@@ -16,10 +16,16 @@ variable "private_subnet_cidr" {
     default = "10.0.2.0/24"
 }
 
-variable "private_network_interface_ips" {
+variable "private_network_interface_ip0" {
     type = list(string)
     description = "IP address for the private network interface"
     default = ["10.0.2.10"]
+}
+
+variable "private_network_interface_ip1" {
+    type = list(string)
+    description = "IP address for the private network interface"
+    default = ["10.0.2.11"]
 }
 
 variable "all_cidr_block" {
