@@ -18,8 +18,8 @@ resource "aws_instance" "instance0" {
   instance_type = "t3.micro"
 
   network_interface {
-    network_interface_id  = aws_network_interface.eni0.id
-    device_index          = 0
+    network_interface_id = aws_network_interface.eni0.id
+    device_index         = 0
   }
 
   tags = {
@@ -40,8 +40,8 @@ resource "aws_instance" "instance1" {
   instance_type = "t3.micro"
 
   network_interface {
-    network_interface_id  = aws_network_interface.eni1.id
-    device_index          = 0
+    network_interface_id = aws_network_interface.eni1.id
+    device_index         = 0
   }
 
   tags = {
@@ -57,10 +57,10 @@ resource "aws_instance" "instance1" {
 
 # Create a new load balancer
 resource "aws_elb" "elb0" {
-  name               = "elb0"
-  security_groups    = [aws_security_group.elb.id]
-  subnets            = [aws_subnet.public.id]
-  
+  name            = "elb0"
+  security_groups = [aws_security_group.elb.id]
+  subnets         = [aws_subnet.public.id]
+
 
   listener {
     instance_port     = 8000

@@ -24,14 +24,14 @@ resource "aws_security_group" "sg" {
   egress {
     from_port   = 0
     to_port     = 0
-    protocol    = "-1" 
+    protocol    = "-1"
     cidr_blocks = var.all_cidr_block
   }
 
   tags = {
     Name = "security_group_vpc0"
   }
-  
+
   lifecycle {
     create_before_destroy = true
   }
@@ -40,7 +40,7 @@ resource "aws_security_group" "sg" {
 }
 
 resource "aws_security_group" "elb" {
-  name        =  "elb_sg"
+  name        = "elb_sg"
   description = "Allow inbound traffic on port 80"
   vpc_id      = aws_vpc.vpc0.id
 
@@ -56,14 +56,14 @@ resource "aws_security_group" "elb" {
   egress {
     from_port   = 0
     to_port     = 0
-    protocol    = "-1" 
+    protocol    = "-1"
     cidr_blocks = var.all_cidr_block
   }
 
   tags = {
     Name = "security_group_elb0"
   }
-  
+
   lifecycle {
     create_before_destroy = true
   }
@@ -77,7 +77,7 @@ resource "aws_network_acl" "main" {
   vpc_id     = aws_vpc.vpc0.id
   subnet_ids = [aws_subnet.public.id, aws_subnet.private.id]
 
-# for api calls
+  # for api calls
   egress {
     protocol   = "tcp"
     rule_no    = 100
@@ -87,7 +87,7 @@ resource "aws_network_acl" "main" {
     to_port    = 443
   }
 
-# for api calls
+  # for api calls
   egress {
     protocol   = "tcp"
     rule_no    = 200
@@ -97,7 +97,7 @@ resource "aws_network_acl" "main" {
     to_port    = 80
   }
 
-# for api calls
+  # for api calls
   ingress {
     protocol   = "tcp"
     rule_no    = 300
@@ -107,7 +107,7 @@ resource "aws_network_acl" "main" {
     to_port    = 80
   }
 
-# for api calls
+  # for api calls
   ingress {
     protocol   = "tcp"
     rule_no    = 400
@@ -117,7 +117,7 @@ resource "aws_network_acl" "main" {
     to_port    = 443
   }
 
-# for ssh access to ec2 instances
+  # for ssh access to ec2 instances
   ingress {
     protocol   = "tcp"
     rule_no    = 500
