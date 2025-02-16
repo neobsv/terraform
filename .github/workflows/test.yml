@@ -10,10 +10,18 @@ on:
       - main
 
 
+env:
+    # verbosity setting for Terraform logs
+    TF_LOG: INFO
+    # Credentials for deployment to AWS
+    AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+    AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
 jobs:
   test:
     defaults:
       run:
+        shell: bash
         working-directory: ./aws_ec2_elb
     permissions:
       contents: read
@@ -26,11 +34,6 @@ jobs:
     steps:
        - name: Checkout the repo 
          uses: actions/checkout@v4
-
-       - name: Configure AWS Credentials
-         run: |
-           echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}"
-           echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}"
 
        - name: Setup Terraform
          uses: hashicorp/setup-terraform@v3
