@@ -14,20 +14,12 @@ resource "aws_iam_access_key" "automation" {
   user = aws_iam_user.automation.name
 }
 
-data "aws_iam_policy" "ec2_full_access" {
-    arn = "arn:aws:iam::aws:policy/AmazonEC2FullAccess"
+resource "aws_iam_user_policy_attachment" "attach_IAM_password_policy" {
+  user  = aws_iam_user.automation.name
+  policy_arn = "arn:aws:iam::aws:policy/IAMUserChangePassword"
 }
 
-data "aws_iam_policy" "iam_change_password" {
-    arn = "arn:aws:iam::aws:policy/IAMUserChangePassword"
-}
-
-resource "aws_iam_user_policy_attachment" "default_policies" {
-  for_each = toset([
-    data.aws_iam_policy.ec2_full_access.arn,
-    data.aws_iam_policy.iam_change_password.arn
-  ])
-
-  user       = aws_iam_user.automation.name
-  policy_arn = each.value
+resource "aws_iam_user_policy_attachment" "attach_EC2_full_access_policy" {
+  user  = aws_iam_user.automation.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2FullAccess"
 }
