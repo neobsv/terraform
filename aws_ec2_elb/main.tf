@@ -1,17 +1,3 @@
-terraform {
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "~> 5.0"
-    }
-  }
-}
-
-# Configure the AWS Provider
-provider "aws" {
-  region = "eu-north-1"
-}
-
 # Create an EC2 instance in the public subnet
 resource "aws_instance" "instance0" {
   ami           = "ami-07a64b147d3500b6a"
