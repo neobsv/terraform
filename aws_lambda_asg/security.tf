@@ -20,11 +20,11 @@ resource "aws_security_group" "sg" {
     cidr_blocks = var.all_cidr_block
   }
 
-  # default deny all egress traffic
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
+  # inbound traffic only on port 80
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
     cidr_blocks = var.all_cidr_block
   }
 
@@ -52,11 +52,11 @@ resource "aws_security_group" "lb_sg" {
     cidr_blocks = var.all_cidr_block
   }
 
-  # default deny all egress traffic
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
+  # inbound traffic only on port 443
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
     cidr_blocks = var.all_cidr_block
   }
 
@@ -78,19 +78,19 @@ resource "aws_security_group" "lambda0" {
   description = "Allow outbound traffic on port 22 (SSH)"
   vpc_id      = aws_vpc.vpc0.id
 
-  # default deny inbound traffic
+  # inbound traffic only on port 80
   ingress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
     cidr_blocks = var.all_cidr_block
   }
 
-  # default deny all egress traffic
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
+  # inbound traffic only on port 443
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
     cidr_blocks = var.all_cidr_block
   }
 
@@ -117,44 +117,24 @@ resource "aws_security_group" "lambda0" {
 # Network ACL for Internet Gateway
 resource "aws_network_acl" "main" {
   vpc_id     = aws_vpc.vpc0.id
-  subnet_ids = [aws_subnet.public.id, aws_subnet.private.id]
+  subnet_ids = [aws_subnet.private.id, aws_subnet.public.id]
 
   # for api calls
-  egress {
+  ingress {
     protocol   = "tcp"
     rule_no    = 100
     action     = "allow"
-    cidr_block = var.vpc_cidr
-    from_port  = 443
-    to_port    = 443
+    cidr_block = var.all_cidr_blocks
+    from_port  = 80
+    to_port    = 80
   }
 
   # for api calls
-  egress {
+  ingress {
     protocol   = "tcp"
     rule_no    = 200
     action     = "allow"
-    cidr_block = var.vpc_cidr
-    from_port  = 80
-    to_port    = 80
-  }
-
-  # for api calls
-  ingress {
-    protocol   = "tcp"
-    rule_no    = 300
-    action     = "allow"
-    cidr_block = var.vpc_cidr
-    from_port  = 80
-    to_port    = 80
-  }
-
-  # for api calls
-  ingress {
-    protocol   = "tcp"
-    rule_no    = 400
-    action     = "allow"
-    cidr_block = var.vpc_cidr
+    cidr_block = var.all_cidr_blocks
     from_port  = 443
     to_port    = 443
   }
@@ -162,11 +142,21 @@ resource "aws_network_acl" "main" {
   # for ssh access to ec2 instances
   ingress {
     protocol   = "tcp"
-    rule_no    = 500
+    rule_no    = 300
     action     = "allow"
-    cidr_block = var.vpc_cidr
+    cidr_block = var.all_cidr_blocks
     from_port  = 22
     to_port    = 22
+  }
+
+  # egress allow all for outbound traffic
+  egress {
+    protocol   = "-1"
+    rule_no    = 100
+    action     = "allow"
+    cidr_block = var.all_cidr_blocks
+    from_port  = 0
+    to_port    = 0
   }
 
   tags = {

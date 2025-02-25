@@ -2,15 +2,15 @@
 
 # Create a lambda Function
 locals {
-    # Lambda Function vars
-    lambda_function_name = "dispatch_on_asg"
-    lambda_runtime = "python3.12"
-    lambda_handler = "lambda_function.lambda_handler"
-    lambda_code_file_path = "lambda_function.zip"
+  # Lambda Function vars
+  lambda_function_name  = "dispatch_on_asg"
+  lambda_runtime        = "python3.12"
+  lambda_handler        = "lambda_function.lambda_handler"
+  lambda_code_file_path = "lambda_function.zip"
 
-    # Autoscaling Group vars
-    asg_ami      = "ami-016038ae9cc8d9f51"
-    asg_ami_type = "t3.micro"
+  # Autoscaling Group vars
+  asg_ami      = "ami-016038ae9cc8d9f51"
+  asg_ami_type = "t3.micro"
 }
 
 resource "aws_lambda_function" "lambda0" {
@@ -22,9 +22,9 @@ resource "aws_lambda_function" "lambda0" {
   memory_size      = 256
   timeout          = 200
   source_code_hash = filebase64sha256(local.lambda_code_file_path)
-  
+
   vpc_config {
-    subnet_ids = [aws_subnet.private.id]
+    subnet_ids         = [aws_subnet.private.id]
     security_group_ids = [aws_security_group.lambda0.id]
   }
 
@@ -51,11 +51,11 @@ resource "aws_launch_template" "launch_template0" {
 }
 
 resource "aws_autoscaling_group" "asg0" {
-  vpc_zone_identifier   = [aws_subnet.private.id]
-  desired_capacity      = 1
-  max_size              = 1
-  min_size              = 1
-  health_check_type = "EC2"
+  vpc_zone_identifier = [aws_subnet.private.id]
+  desired_capacity    = 1
+  max_size            = 1
+  min_size            = 1
+  health_check_type   = "EC2"
 
   launch_template {
     id      = aws_launch_template.launch_template0.id

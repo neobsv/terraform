@@ -1,9 +1,9 @@
 # Create the necessary IAM roles for the lambda function
 
 resource "aws_iam_role" "lambda0_role" {
-  name               = "lambda0_role"
-  path               = "/system/"
-  
+  name = "lambda0_role"
+  path = "/system/"
+
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
     Statement = [
@@ -64,7 +64,7 @@ resource "aws_iam_role_policy_attachment" "iam_role_policy_attachment_lambda_bas
 }
 
 resource "aws_iam_role_policy_attachment" "iam_role_policy_attachment_lambda_vpc_access_execution" {
-  role       =  aws_iam_role.lambda0_role.id
+  role       = aws_iam_role.lambda0_role.id
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
 
   depends_on = [aws_iam_policy.lambda0_execute_policy]

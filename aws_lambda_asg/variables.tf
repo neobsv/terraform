@@ -12,7 +12,7 @@ variable "public_subnet_cidr" {
 
 variable "private_subnet_cidr" {
   type        = string
-  description = "CIDR block for public subnets"
+  description = "CIDR block for private subnets"
   default     = "10.0.2.0/24"
 }
 
@@ -20,4 +20,10 @@ variable "all_cidr_block" {
   type        = list(string)
   description = "List of CIDR blocks for the allowed ingress"
   default     = ["0.0.0.0/0"]
+}
+
+variable "all_cidr_blocks" {
+  type        = string
+  description = "CIDR block for the VPC"
+  default     = "0.0.0.0/0"
 }

@@ -20,6 +20,14 @@ resource "aws_security_group" "sg" {
     cidr_blocks = var.all_cidr_block_sg
   }
 
+  # inbound traffic only on port 443
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = var.all_cidr_block_sg
+  }
+
   tags = {
     Name = "security_group_public"
   }
@@ -53,6 +61,14 @@ resource "aws_security_group" "sg_private" {
     cidr_blocks = var.vpc_cidr_block_sg
   }
 
+  # inbound traffic only on port 443
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = var.vpc_cidr_block_sg
+  }
+
   tags = {
     Name = "security_group_private"
   }
@@ -73,6 +89,14 @@ resource "aws_security_group" "elb" {
   ingress {
     from_port   = 80
     to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = var.all_cidr_block_sg
+  }
+
+  # inbound traffic only on port 443
+  ingress {
+    from_port   = 443
+    to_port     = 443
     protocol    = "tcp"
     cidr_blocks = var.all_cidr_block_sg
   }
@@ -131,7 +155,7 @@ resource "aws_network_acl" "main" {
     action     = "allow"
     cidr_block = var.all_cidr_blocks
     from_port  = 0
-    to_port    = 65535
+    to_port    = 0
   }
 
   tags = {
