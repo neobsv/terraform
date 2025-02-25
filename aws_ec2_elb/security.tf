@@ -1,6 +1,6 @@
-# Security Group for VPC 0
+# Security Group for public instances
 resource "aws_security_group" "sg" {
-  name        = "vpc0_sg"
+  name        = "public_sg"
   description = "Allow inbound traffic on port 22 (SSH)"
   vpc_id      = aws_vpc.vpc0.id
 
@@ -9,7 +9,7 @@ resource "aws_security_group" "sg" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = var.all_cidr_block
+    cidr_blocks = var.all_cidr_block_sg
   }
 
   # inbound traffic only on port 80
@@ -17,7 +17,7 @@ resource "aws_security_group" "sg" {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
-    cidr_blocks = var.all_cidr_block
+    cidr_blocks = var.all_cidr_block_sg
   }
 
   # default deny all egress traffic
@@ -25,11 +25,52 @@ resource "aws_security_group" "sg" {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
-    cidr_blocks = var.all_cidr_block
+    cidr_blocks = var.all_cidr_block_sg
   }
 
   tags = {
-    Name = "security_group_vpc0"
+    Name = "security_group_public"
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+
+  depends_on = [aws_vpc.vpc0]
+}
+
+# Security Group for private instances
+resource "aws_security_group" "sg_private" {
+  name        = "private_sg"
+  description = "Allow inbound traffic on port 22 (SSH)"
+  vpc_id      = aws_vpc.vpc0.id
+
+  # inbound traffic only on port 22 (SSH)
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = var.vpc_cidr_block_sg
+  }
+
+  # inbound traffic only on port 80
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = var.vpc_cidr_block_sg
+  }
+
+  # default deny all egress traffic
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = var.vpc_cidr_block_sg
+  }
+
+  tags = {
+    Name = "security_group_private"
   }
 
   lifecycle {
@@ -49,7 +90,7 @@ resource "aws_security_group" "elb" {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
-    cidr_blocks = var.all_cidr_block
+    cidr_blocks = var.all_cidr_block_sg
   }
 
   # default deny all egress traffic
@@ -57,7 +98,7 @@ resource "aws_security_group" "elb" {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
-    cidr_blocks = var.all_cidr_block
+    cidr_blocks = var.all_cidr_block_sg
   }
 
   tags = {
@@ -82,7 +123,7 @@ resource "aws_network_acl" "main" {
     protocol   = "tcp"
     rule_no    = 100
     action     = "allow"
-    cidr_block = var.vpc_cidr
+    cidr_block = var.all_cidr_block
     from_port  = 443
     to_port    = 443
   }
@@ -92,7 +133,7 @@ resource "aws_network_acl" "main" {
     protocol   = "tcp"
     rule_no    = 200
     action     = "allow"
-    cidr_block = var.vpc_cidr
+    cidr_block = var.all_cidr_block
     from_port  = 80
     to_port    = 80
   }
@@ -102,7 +143,7 @@ resource "aws_network_acl" "main" {
     protocol   = "tcp"
     rule_no    = 300
     action     = "allow"
-    cidr_block = var.vpc_cidr
+    cidr_block = var.all_cidr_block
     from_port  = 80
     to_port    = 80
   }
@@ -112,7 +153,7 @@ resource "aws_network_acl" "main" {
     protocol   = "tcp"
     rule_no    = 400
     action     = "allow"
-    cidr_block = var.vpc_cidr
+    cidr_block = var.all_cidr_block
     from_port  = 443
     to_port    = 443
   }
@@ -122,7 +163,7 @@ resource "aws_network_acl" "main" {
     protocol   = "tcp"
     rule_no    = 500
     action     = "allow"
-    cidr_block = var.vpc_cidr
+    cidr_block = var.all_cidr_block
     from_port  = 22
     to_port    = 22
   }

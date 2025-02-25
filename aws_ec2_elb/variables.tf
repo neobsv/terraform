@@ -16,10 +16,10 @@ variable "private_subnet_cidr" {
   default     = "10.0.2.0/24"
 }
 
-variable "private_network_interface_ip0" {
+variable "public_network_interface_ip0" {
   type        = list(string)
   description = "IP address for the private network interface"
-  default     = ["10.0.2.10"]
+  default     = ["10.0.1.10"]
 }
 
 variable "private_network_interface_ip1" {
@@ -28,8 +28,20 @@ variable "private_network_interface_ip1" {
   default     = ["10.0.2.11"]
 }
 
-variable "all_cidr_block" {
+variable "all_cidr_block_sg" {
   type        = list(string)
   description = "List of CIDR blocks for the allowed ingress"
   default     = ["0.0.0.0/0"]
+}
+
+variable "vpc_cidr_block_sg" {
+  type        = list(string)
+  description = "List of CIDR blocks for the allowed ingress"
+  default     = ["10.0.0.0/16"]
+}
+
+variable "all_cidr_block" {
+  type        = string
+  description = "List of CIDR blocks for the allowed ingress"
+  default     = "0.0.0.0/0"
 }

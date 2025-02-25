@@ -1,7 +1,7 @@
 # Create an EC2 instance in the public subnet
 resource "aws_instance" "instance0" {
-  ami           = "ami-07a64b147d3500b6a"
-  instance_type = "t3.micro"
+  ami                    = "ami-07a64b147d3500b6a"
+  instance_type          = "t3.micro"
 
   network_interface {
     network_interface_id = aws_network_interface.eni0.id
@@ -16,11 +16,11 @@ resource "aws_instance" "instance0" {
     create_before_destroy = true
   }
 
-  depends_on = [aws_network_interface.eni0]
+  depends_on = [aws_security_group.sg, aws_network_interface.eni0]
 
 }
 
-# Create an EC2 instance in the public subnet
+# Create an EC2 instance in the private subnet
 resource "aws_instance" "instance1" {
   ami           = "ami-07a64b147d3500b6a"
   instance_type = "t3.micro"
@@ -38,7 +38,7 @@ resource "aws_instance" "instance1" {
     create_before_destroy = true
   }
 
-  depends_on = [aws_network_interface.eni1]
+  depends_on = [aws_security_group.sg_private, aws_network_interface.eni1]
 }
 
 # Create a new load balancer
