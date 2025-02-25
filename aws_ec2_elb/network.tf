@@ -50,8 +50,8 @@ resource "aws_subnet" "private" {
 
 # Create a network interface for the private subnet
 resource "aws_network_interface" "eni0" {
-  subnet_id   = aws_subnet.public.id
-  private_ips = var.public_network_interface_ip0
+  subnet_id       = aws_subnet.public.id
+  private_ips     = var.public_network_interface_ip0
   security_groups = [aws_security_group.sg_private.id]
 
   tags = {
@@ -68,8 +68,8 @@ resource "aws_network_interface" "eni0" {
 
 # Create a network interface for the private subnet
 resource "aws_network_interface" "eni1" {
-  subnet_id   = aws_subnet.private.id
-  private_ips = var.private_network_interface_ip1
+  subnet_id       = aws_subnet.private.id
+  private_ips     = var.private_network_interface_ip1
   security_groups = [aws_security_group.sg.id]
 
   tags = {
