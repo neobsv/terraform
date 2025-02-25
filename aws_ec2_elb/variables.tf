@@ -1,9 +1,3 @@
-variable "vpc_cidr" {
-  type        = string
-  description = "CIDR block for the VPC"
-  default     = "10.0.0.0/16"
-}
-
 variable "public_subnet_cidr" {
   type        = string
   description = "CIDR block for public subnets"
@@ -40,8 +34,14 @@ variable "vpc_cidr_block_sg" {
   default     = ["10.0.0.0/16"]
 }
 
-variable "all_cidr_block" {
+variable "all_cidr_blocks" {
   type        = string
   description = "List of CIDR blocks for the allowed ingress"
   default     = "0.0.0.0/0"
+}
+
+variable "vpc_cidr" {
+  type        = string
+  description = "CIDR block for the VPC"
+  default     = "10.0.0.0/16"
 }

@@ -48,11 +48,11 @@ resource "aws_subnet" "private" {
   depends_on = [aws_vpc.vpc0]
 }
 
-# Create a network interface for the private subnet
+# Create a network interface for the public subnet
 resource "aws_network_interface" "eni0" {
   subnet_id       = aws_subnet.public.id
   private_ips     = var.public_network_interface_ip0
-  security_groups = [aws_security_group.sg_private.id]
+  security_groups = [aws_security_group.sg.id]
 
   tags = {
     Name        = "public_eni0"
@@ -70,7 +70,7 @@ resource "aws_network_interface" "eni0" {
 resource "aws_network_interface" "eni1" {
   subnet_id       = aws_subnet.private.id
   private_ips     = var.private_network_interface_ip1
-  security_groups = [aws_security_group.sg.id]
+  security_groups = [aws_security_group.sg_private.id]
 
   tags = {
     Name        = "private_eni1"
@@ -97,4 +97,52 @@ resource "aws_internet_gateway" "igw" {
   }
 
   depends_on = [aws_vpc.vpc0]
+}
+
+resource "aws_route_table" "route_table" {
+  vpc_id = aws_vpc.vpc0.id
+
+  tags = {
+    Name = "route_table0"
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+  
+  depends_on = [aws_vpc.vpc0]
+}
+
+resource "aws_route" "public_route" {
+  route_table_id         = aws_route_table.route_table.id
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id             = aws_internet_gateway.igw.id
+
+  lifecycle {
+    create_before_destroy = true
+  }
+  
+  depends_on = [aws_route_table.route_table]
+}
+
+resource "aws_route_table_association" "public" {
+  subnet_id      = aws_subnet.public.id
+  route_table_id = aws_route_table.route_table.id
+
+  lifecycle {
+    create_before_destroy = true
+  }
+
+  depends_on = [aws_route_table.route_table, aws_subnet.public]
+}
+
+resource "aws_route_table_association" "private" {
+  subnet_id      = aws_subnet.private.id
+  route_table_id = aws_route_table.route_table.id
+
+  lifecycle {
+    create_before_destroy = true
+  }
+
+  depends_on = [aws_route_table.route_table, aws_subnet.private]
 }
