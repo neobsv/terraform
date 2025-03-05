@@ -137,7 +137,7 @@ resource "aws_network_acl" "main" {
     from_port  = 443
     to_port    = 443
   }
-
+  
   # for ssh access to ec2 instances
   ingress {
     protocol   = "tcp"
