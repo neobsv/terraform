@@ -14,12 +14,31 @@ resource "aws_vpc" "vpc0" {
 resource "aws_subnet" "public" {
   vpc_id            = aws_vpc.vpc0.id
   cidr_block        = var.public_subnet_cidr
-  availability_zone = "eu-north-1a"
+  availability_zone = "eu-north-1b"
 
   map_public_ip_on_launch = false
 
   tags = {
     Name = "public_subnet"
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+
+  depends_on = [aws_vpc.vpc0]
+}
+
+# Create a private subnet within the VPC, to host instances
+resource "aws_subnet" "private" {
+  vpc_id            = aws_vpc.vpc0.id
+  cidr_block        = var.private_subnet_cidr
+  availability_zone = "eu-north-1a"
+
+  map_public_ip_on_launch = false
+
+  tags = {
+    Name = "private_subnet"
   }
 
   lifecycle {
@@ -79,15 +98,4 @@ resource "aws_route_table_association" "public" {
   }
 
   depends_on = [aws_route_table.route_table, aws_subnet.public]
-}
-
-resource "aws_route_table_association" "private" {
-  subnet_id      = aws_subnet.private.id
-  route_table_id = aws_route_table.route_table.id
-
-  lifecycle {
-    create_before_destroy = true
-  }
-
-  depends_on = [aws_route_table.route_table, aws_subnet.private]
 }

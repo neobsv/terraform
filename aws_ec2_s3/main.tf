@@ -3,8 +3,9 @@
 
 # Create an EC2 instance in the private subnet
 resource "aws_instance" "instance0" {
-  ami           = vars.aws_ami_id
+  ami           = var.aws_ami_id
   instance_type = "t3.micro"
+  subnet_id     = aws_subnet.public.id
 
   tags = {
     Name = "Example EC2 Instance"
@@ -14,7 +15,7 @@ resource "aws_instance" "instance0" {
     create_before_destroy = true
   }
 
-  depends_on = [aws_security_group.sg_private, aws_network_interface.eni1]
+  depends_on = [aws_subnet.public, aws_security_group.sg]
 }
 
 # Create an S3 bucket in the private subnet
@@ -68,7 +69,7 @@ resource "aws_lb" "lb" {
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.lb_sg.id]
-  subnets            = [aws_subnet.public.id]
+  subnets            = [aws_subnet.public.id, aws_subnet.private.id]
 
   enable_deletion_protection = true
 

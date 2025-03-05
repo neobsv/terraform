@@ -39,46 +39,6 @@ resource "aws_security_group" "sg" {
   depends_on = [aws_vpc.vpc0]
 }
 
-# Security Group for private instances
-resource "aws_security_group" "sg_private" {
-  name        = "private_sg"
-  description = "Allow inbound traffic on port 22 (SSH)"
-  vpc_id      = aws_vpc.vpc0.id
-
-  # inbound traffic only on port 22 (SSH)
-  ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = var.vpc_cidr_block_sg
-  }
-
-  # inbound traffic only on port 80
-  ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = var.vpc_cidr_block_sg
-  }
-
-  # inbound traffic only on port 443
-  ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = var.vpc_cidr_block_sg
-  }
-
-  tags = {
-    Name = "security_group_private"
-  }
-
-  lifecycle {
-    create_before_destroy = true
-  }
-
-  depends_on = [aws_vpc.vpc0]
-}
 
 resource "aws_security_group" "lb_sg" {
   name        = "lb_sg"
@@ -116,7 +76,7 @@ resource "aws_security_group" "lb_sg" {
 # Network ACL for Internet Gateway
 resource "aws_network_acl" "main" {
   vpc_id     = aws_vpc.vpc0.id
-  subnet_ids = [aws_subnet.private.id, aws_subnet.public.id]
+  subnet_ids = [aws_subnet.public.id]
 
   # for api calls
   ingress {
