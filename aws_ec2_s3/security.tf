@@ -80,8 +80,8 @@ resource "aws_security_group" "sg_private" {
   depends_on = [aws_vpc.vpc0]
 }
 
-resource "aws_security_group" "elb" {
-  name        = "elb_sg"
+resource "aws_security_group" "lb_sg" {
+  name        = "lb_sg"
   description = "Allow inbound traffic on port 80"
   vpc_id      = aws_vpc.vpc0.id
 
@@ -102,7 +102,7 @@ resource "aws_security_group" "elb" {
   }
 
   tags = {
-    Name = "security_group_elb0"
+    Name = "security_group_lb0"
   }
 
   lifecycle {

@@ -1,6 +1,6 @@
 # Create an EC2 instance in the public subnet
 resource "aws_instance" "instance0" {
-  ami           =  vars.aws_ami_id
+  ami           = vars.aws_ami_id
   instance_type = "t3.micro"
 
   network_interface {
