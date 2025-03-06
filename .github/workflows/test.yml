@@ -36,6 +36,18 @@ jobs:
        - name: Checkout the repo 
          uses: actions/checkout@v4
 
+       - name: Google Cloud Auth Service Account
+         uses: google-github-actions/auth@v2
+         with:
+           credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+
+       - name: Setup Google Cloud SDK
+         uses: google-github-actions/setup-gcloud@v2
+
+       - name: Use GCloud CLI
+         run: |
+           gcloud info
+
        - name: Setup Terraform
          uses: hashicorp/setup-terraform@v3
        
