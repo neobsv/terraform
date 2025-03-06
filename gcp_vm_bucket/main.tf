@@ -37,11 +37,14 @@ resource "google_compute_instance" "instance0" {
     email  = google_service_account.default.email
     scopes = ["cloud-platform"]
   }
+
+  depends_on = [google_compute_network.vpc_network]
+
 }
 
-resource "google_storage_bucket" "bucket0" {
-  name                        = "example-bucket"
-  location                    = var.zone
+resource "google_storage_bucket" "strange_bucket0" {
+  name                        = "strange_bucket0"
+  location                    = var.region
   uniform_bucket_level_access = true
   force_destroy               = true
 }

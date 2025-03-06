@@ -4,6 +4,12 @@ variable "zone" {
   default     = "us-west1-b"
 }
 
+variable "region" {
+  type        = string
+  description = "GCP zone name for Oregon"
+  default     = "us-west1"
+}
+
 variable "instance_os" {
   type        = string
   description = "Operating system for the GCP instance"
@@ -14,10 +20,4 @@ variable "project_name" {
   type        = string
   description = "Project name for GCP resources"
   default     = "forward-alchemy-451915-i9"
-}
-
-variable "region" {
-  type        = string
-  description = "GCP region for Oregon"
-  default     = "us-west1"
 }
